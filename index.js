@@ -31,7 +31,7 @@ async function getValues() {
     },
   }).then((res) => res.json()).then((json) => {
     for (const item in json.items) {
-      let type = json.items[item][5] >= 0 ? json.items[item][5] : null;
+      let type = json.items[item][5] >= 0 ? json.items[item][5] : 0;
       itemValues[item] = { value: Math.abs(json.items[item][4]), type: type }; //assings the item values and demand
     }
     //console.log(itemValues)
@@ -112,11 +112,7 @@ function generateAd() {
       let requestValue = totalSendValue * (1 - config.RequestPercent / 100);
       let options = [];
       for (const item in itemValues) {
-        if (
-          itemValues[item].value >= requestValue &&
-          itemValues[item].value <= totalSendValue &&
-          itemValues[item].type >= config.minDemand
-        ) {
+        if (itemValues[item].value >= requestValue && itemValues[item].value <= totalSendValue && itemValues[item].type >= config.minDemand && !sendingSide.includes(parseFloat(item))) {
           options.push(item);
         }
       }
@@ -161,7 +157,7 @@ function generateAd() {
               }
             }
           }
-          if (maxSId < maxRId) {
+          if (maxSValue < maxRValue) {
             receivingSide.push("upgrade");
           } else {
             receivingSide.push("downgrade");
@@ -259,7 +255,7 @@ async function postAd(sending, receiving) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      cookie: `${rolimonsToken}`,
+      "cookie": `${rolimonsToken}`
     },
     body: JSON.stringify(reqBody),
   }).then((res) => res.json()).then((json) => {
