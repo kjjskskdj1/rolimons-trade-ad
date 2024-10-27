@@ -275,4 +275,4 @@ getValues(); //calls values function, script will start from here
 app.get("/", (req, res) => {
   res.json({ message: 'Trade ad bot is up and running!' }); //verifies trade ad bot is up and running
 })
-app.listen(8080) //port to use for the api.
+app.listen(8000) //port to use for the api.
